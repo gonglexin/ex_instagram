@@ -4,7 +4,7 @@ defmodule ExInstagram.Repo.Migrations.CreatePosts do
   def change do
     create table(:posts) do
       add :images, {:array, :string}
-      add :caption, :string
+      add :caption, :text
       add :user_id, references(:users, on_delete: :nothing)
 
       timestamps(type: :utc_datetime)

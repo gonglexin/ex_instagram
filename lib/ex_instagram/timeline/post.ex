@@ -2,6 +2,8 @@ defmodule ExInstagram.Timeline.Post do
   use Ecto.Schema
   import Ecto.Changeset
 
+  alias ExInstagram.Accounts.User
+
   schema "posts" do
     field :images, {:array, :string}
     field :caption, :string

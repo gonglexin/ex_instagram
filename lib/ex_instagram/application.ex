@@ -14,8 +14,7 @@ defmodule ExInstagram.Application do
       {Phoenix.PubSub, name: ExInstagram.PubSub},
       # Start the Finch HTTP client for sending emails
       {Finch, name: ExInstagram.Finch},
-      # Start a worker by calling: ExInstagram.Worker.start_link(arg)
-      # {ExInstagram.Worker, arg},
+      ExInstagram.AiSupervisor,
       # Start to serve requests, typically the last entry
       ExInstagramWeb.Endpoint
     ]

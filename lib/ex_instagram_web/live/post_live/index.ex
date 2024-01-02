@@ -6,7 +6,15 @@ defmodule ExInstagramWeb.PostLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, stream(socket, :posts, Timeline.list_posts())}
+    if connected?(socket) do
+      Timeline.subscribe()
+    end
+
+    {:ok, stream(socket, :posts, Timeline.list_recent_posts(100))}
+  end
+
+  def handle_info({:post_created, post}, socket) do
+    {:noreply, socket |> stream_insert(:posts, post, at: 0)}
   end
 
   @impl true

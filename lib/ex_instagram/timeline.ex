@@ -7,6 +7,23 @@ defmodule ExInstagram.Timeline do
   alias ExInstagram.Repo
 
   alias ExInstagram.Timeline.Post
+  alias ExInstagram.Accounts.User
+
+  def subscribe() do
+    Phoenix.PubSub.subscribe(ExInstagram.PubSub, "posts")
+  end
+
+  defp broadcast({:error, _reason} = error, _), do: error
+
+  defp broadcast({:ok, post}, event) do
+    Phoenix.PubSub.broadcast(
+      ExInstagram.PubSub,
+      "posts",
+      {event, post}
+    )
+
+    {:ok, post}
+  end
 
   @doc """
   Returns the list of posts.
@@ -19,6 +36,23 @@ defmodule ExInstagram.Timeline do
   """
   def list_posts do
     Repo.all(Post)
+  end
+
+  def list_posts_by_user(user, limit) do
+    Repo.all(
+      from(p in Post,
+        where: p.user_id == ^user.id,
+        order_by: [desc: p.inserted_at],
+        limit: ^limit
+      )
+    )
+    |> Repo.preload([:user])
+  end
+
+  def list_recent_posts(limit) do
+    from(p in Post, order_by: [desc: p.inserted_at], limit: ^limit)
+    |> Repo.all()
+    |> Repo.preload([:user])
   end
 
   @doc """
@@ -49,10 +83,19 @@ defmodule ExInstagram.Timeline do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_post(attrs \\ %{}) do
+  # def create_post(attrs \\ %{}) do
+  #   %Post{}
+  #   |> Post.changeset(attrs)
+  #   |> Repo.insert()
+  #   |> broadcast(:post_created)
+  # end
+
+  def create_post(%User{} = user, attrs \\ %{}) do
     %Post{}
     |> Post.changeset(attrs)
+    |> Ecto.Changeset.put_assoc(:user, user)
     |> Repo.insert()
+    |> broadcast(:post_created)
   end
 
   @doc """

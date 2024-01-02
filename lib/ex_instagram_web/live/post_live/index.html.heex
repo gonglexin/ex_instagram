@@ -1,0 +1,16 @@
+<div class="grid grid-cols-2">
+  <div id="posts" phx-update="stream" class="space-y-8 mt-12 max-w-2xl mx-auto">
+    <%!-- <div :for={{id, post} <- @streams.posts}> --%>
+      <.live_component
+        module={ExInstagramWeb.PostLive.PostComponent}
+        :for={{id, post} <- @streams.posts}
+        id={id}
+        post={post}
+        user={post.user}
+        patch={~p"/"}
+      />
+    <%!-- </div> --%>
+  </div>
+  <div id="logs">
+  </div>
+</div>

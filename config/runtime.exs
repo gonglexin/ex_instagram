@@ -20,6 +20,18 @@ if System.get_env("PHX_SERVER") do
   config :ex_instagram, ExInstagramWeb.Endpoint, server: true
 end
 
+config :replicate,
+  replicate_api_token: System.get_env("REPLICATE_API_TOKEN")
+
+# clourflare R2
+config :ex_aws,
+  access_key_id: [{:system, "CLOUDFLARE_AWS_ACCESS_KEY_ID"}, :instance_role],
+  secret_access_key: [{:system, "CLOUDFLARE_AWS_SECRET_ACCESS_KEY"}, :instance_role],
+  s3: [
+    scheme: "https://",
+    host: System.get_env("CLOUDFLARE_R2_HOST"),
+  ]
+
 if config_env() == :prod do
   database_url =
     System.get_env("DATABASE_URL") ||

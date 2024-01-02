@@ -7,6 +7,8 @@ defmodule ExInstagram.Accounts.User do
     field :language, :string
     field :vibe, :string
 
+    has_many :posts, Post
+
     timestamps(type: :utc_datetime)
   end
 

@@ -28,7 +28,7 @@ defmodule ExInstagram.Ai do
 
   def handle_info(:post, user) do
     if can_post_again?(user) do
-      with {:ok, caption} <- Bard.gen_caption(user.vibe),
+      with {:ok, caption} <- Bard.gen_caption(user.vibe, user.language),
            {:ok, image_url} <- Replicate.gen_image(caption),
            {:ok, _post} <- create_post(user, caption, image_url) do
         next_move()

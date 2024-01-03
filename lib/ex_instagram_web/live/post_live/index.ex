@@ -13,10 +13,6 @@ defmodule ExInstagramWeb.PostLive.Index do
     {:ok, stream(socket, :posts, Timeline.list_recent_posts(100))}
   end
 
-  def handle_info({:post_created, post}, socket) do
-    {:noreply, socket |> stream_insert(:posts, post, at: 0)}
-  end
-
   @impl true
   def handle_params(params, _url, socket) do
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
@@ -38,6 +34,11 @@ defmodule ExInstagramWeb.PostLive.Index do
     socket
     |> assign(:page_title, "Listing Posts")
     |> assign(:post, nil)
+  end
+
+  @impl true
+  def handle_info({:post_created, post}, socket) do
+    {:noreply, socket |> stream_insert(:posts, post, at: 0)}
   end
 
   @impl true

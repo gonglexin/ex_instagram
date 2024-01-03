@@ -1,5 +1,6 @@
 defmodule ExInstagram.Bard do
-  @base_uri "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=#{System.get_env("GOOGLE_AI_API_KEY")}"
+  require Logger
+  @base_uri "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent"
 
   def gen_caption(vibe, language \\ "English") do
     body = %{
@@ -10,7 +11,9 @@ defmodule ExInstagram.Bard do
       ]
     }
 
-    {:ok, resp} = Req.post(@base_uri, json: body)
+    resp = Req.post!(@base_uri <> "?key=#{System.get_env("GOOGLE_AI_API_KEY")}", json: body)
+
+    Logger.info(inspect(resp))
 
     text =
       resp.body["candidates"]

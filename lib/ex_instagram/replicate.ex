@@ -22,7 +22,7 @@ defmodule ExInstagram.Replicate do
     image_binary = Req.get!(url).body
 
     file_name = "#{uuid}.png"
-    bucket = System.get_env("AWS_BUCKET")
+    bucket = System.get_env("BUCKET_NAME")
 
     %{status_code: 200} =
       ExAws.S3.put_object(bucket, file_name, image_binary)

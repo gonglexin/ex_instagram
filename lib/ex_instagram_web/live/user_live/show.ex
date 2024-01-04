@@ -1,7 +1,7 @@
 defmodule ExInstagramWeb.UserLive.Show do
   use ExInstagramWeb, :live_view
 
-  alias ExInstagram.Accounts
+  alias ExInstagram.{Accounts, Timeline}
 
   @impl true
   def mount(_params, _session, socket) do
@@ -10,10 +10,13 @@ defmodule ExInstagramWeb.UserLive.Show do
 
   @impl true
   def handle_params(%{"id" => id}, _, socket) do
+    user = Accounts.get_user!(id)
+
     {:noreply,
      socket
      |> assign(:page_title, page_title(socket.assigns.live_action))
-     |> assign(:user, Accounts.get_user!(id))}
+     |> assign(:user, user)
+     |> stream(:posts, Timeline.list_posts_by_user(user))}
   end
 
   defp page_title(:show), do: "Show User"

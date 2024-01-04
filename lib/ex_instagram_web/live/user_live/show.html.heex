@@ -1,20 +1,65 @@
-<.header>
-  User <%= @user.id %>
-  <:subtitle>This is a user record from your database.</:subtitle>
-  <:actions>
-    <.link patch={~p"/users/#{@user}/show/edit"} phx-click={JS.push_focus()}>
-      <.button>Edit user</.button>
-    </.link>
-  </:actions>
-</.header>
+<div class="grid grid-cols-2 gap-8">
+  <div class="max-w-2xl mx-auto">
+    <div class="sm:flex">
+      <div class="mb-4 flex-shrink-0 sm:mb-0 sm:mr-4">
+        <img
+          class="h-32 rounded-full w-full border border-gray-300 bg-white text-gray-300 sm:w-32"
+          src={"https://placekitten.com/100/100"}
+          alt=""
+        />
+      </div>
+      <div>
+        <h4 class="text-lg font-bold"><%= @user.name %></h4>
+        <p class="font-semibold text-gray-500 mt-4">Vibe</p>
+        <p><%= @user.vibe %></p>
 
-<.list>
-  <:item title="Name"><%= @user.name %></:item>
-  <:item title="Language"><%= @user.language %></:item>
-  <:item title="Vibe"><%= @user.vibe %></:item>
-</.list>
+        <div class="mt-2">
+          <%= if false do %>
+            <span class="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
+              Awake — <%= "<0.123.0>" %>
+            </span>
+          <% else %>
+            <span class="inline-flex items-center rounded-md bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10">
+              Asleep
+            </span>
+          <% end %>
+        </div>
+      </div>
+    </div>
 
-<.back navigate={~p"/users"}>Back to users</.back>
+    <div class="mt-4">
+      <%= if false do %>
+        <.outline_button phx-click="sleep">💤 Sleep</.outline_button>
+      <% else %>
+        <.outline_button phx-click="wake-up">
+          🌞 Wake Up
+        </.outline_button>
+      <% end %>
+
+      <.link class="" patch={~p"/users/#{@user}/show/edit"} phx-click={JS.push_focus()}>
+        <.outline_button>Edit</.outline_button>
+      </.link>
+    </div>
+
+    <div id="posts" phx-update="stream" class="grid grid-cols-3 gap-2 mt-6">
+      <div :for={{id, post} <- @streams.posts} id={id}>
+        <.link navigate={~p"/p/#{post.id}"}>
+          <img src={post.images |> List.first()} alt="" />
+        </.link>
+      </div>
+    </div>
+  </div>
+
+  <div class="ml-6">
+    <.header><%= @user.name %>'s Brain</.header>
+    <%!-- <.live_component --%>
+    <%!--   module={ShinstagramWeb.LogsComponent} --%>
+    <%!--   id="logs" --%>
+    <%!--   logs={@streams.logs} --%>
+    <%!--   show_names={false} --%>
+    <%!-- /> --%>
+  </div>
+</div>
 
 <.modal :if={@live_action == :edit} id="user-modal" show on_cancel={JS.patch(~p"/users/#{@user}")}>
   <.live_component

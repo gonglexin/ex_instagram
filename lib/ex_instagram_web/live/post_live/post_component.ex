@@ -4,7 +4,7 @@ defmodule ExInstagramWeb.PostLive.PostComponent do
   def render(assigns) do
     ~H"""
     <div id={@id} class="max-w-md mx-auto border-b pb-6 border-gray-300">
-      <.link navigate={~p"/#{@user.name}"} class="group block flex-shrink-0">
+      <.link navigate={~p"/users/#{@user}"} class="group block flex-shrink-0">
         <div class="flex items-center">
           <div>
             <img class="inline-block h-9 w-9 rounded-full" src={"https://placekitten.com/100/100"} alt="" />

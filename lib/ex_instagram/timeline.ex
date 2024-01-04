@@ -38,6 +38,10 @@ defmodule ExInstagram.Timeline do
     Repo.all(Post)
   end
 
+  def list_posts_by_user(user) do
+    Repo.all(from(p in Post, where: p.user_id == ^user.id, order_by: [desc: p.inserted_at]))
+  end
+
   def list_posts_by_user(user, limit) do
     Repo.all(
       from(p in Post,

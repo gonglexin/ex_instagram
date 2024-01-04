@@ -11,6 +11,14 @@
       />
     <%!-- </div> --%>
   </div>
-  <div id="logs">
+  <div id="control-panel" >
+    <.header>Control Panel</.header>
+    <div class="flex flex-row space-x-4 mt-4">
+      <.outline_button phx-click="wake-up">🌞 Wake Up Everybody</.outline_button>
+      <.outline_button phx-click="sleep">😴 Everybody Sleep!</.outline_button>
+      <.link navigate={~p"/users"}>
+        <.outline_button><.icon name="hero-user-group" /> List Users</.outline_button>
+      </.link>
+    </div>
   </div>
 </div>

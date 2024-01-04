@@ -47,6 +47,24 @@ defmodule ExInstagramWeb.PostLive.Index do
   end
 
   @impl true
+  def handle_event("wake-up", _, socket) do
+    ExInstagram.Accounts.list_users()
+    |>Enum.each(&ExInstagram.AiSupervisor.start_child(&1))
+
+    {:noreply, socket}
+  end
+
+  @impl true
+  def handle_event("sleep", _, socket) do
+    DynamicSupervisor.which_children(ExInstagram.AiSupervisor)
+    |> Enum.each(fn {_, pid, :worker, [ExInstagram.Ai]} ->
+      DynamicSupervisor.terminate_child(ExInstagram.AiSupervisor, pid)
+    end)
+
+    {:noreply, socket}
+  end
+
+  @impl true
   def handle_event("delete", %{"id" => id}, socket) do
     post = Timeline.get_post!(id)
     {:ok, _} = Timeline.delete_post(post)

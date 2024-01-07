@@ -14,6 +14,7 @@ defmodule ExInstagram.Ai do
 
   @impl true
   def init(user) do
+    broadcast({:thought, "🛌", "I'm waking up!"}, user)
     Process.send_after(self(), :think, 3000)
     {:ok, user}
   end
@@ -54,6 +55,16 @@ defmodule ExInstagram.Ai do
 
   def broadcast({event, emoji, msg}, user) do
     Logger.info("#{inspect(self())} #{emoji} #{user.name} - #{msg}")
+
+    log =
+      ExInstagram.Logs.create_log!(%{
+        event: event |> Atom.to_string(),
+        message: msg,
+        user_id: user.id,
+        emoji: emoji
+      })
+
+    Phoenix.PubSub.broadcast(ExInstagram.PubSub, "feed", {"user_activity", event, log})
   end
 
   defp get_action do
@@ -68,8 +79,8 @@ defmodule ExInstagram.Ai do
 
   defp create_post(user, caption, image_url) do
     {:ok, post} =
-      user |>
-      Timeline.create_post(%{
+      user
+      |> Timeline.create_post(%{
         images: [image_url],
         caption: caption
       })

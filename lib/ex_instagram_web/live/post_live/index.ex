@@ -1,16 +1,23 @@
 defmodule ExInstagramWeb.PostLive.Index do
   use ExInstagramWeb, :live_view
 
+  alias ExInstagram.Logs
   alias ExInstagram.Timeline
   alias ExInstagram.Timeline.Post
 
   @impl true
   def mount(_params, _session, socket) do
     if connected?(socket) do
+      Phoenix.PubSub.subscribe(ExInstagram.PubSub, "feed")
       Timeline.subscribe()
     end
 
-    {:ok, stream(socket, :posts, Timeline.list_recent_posts(100))}
+    socket =
+      socket
+      |> stream(:posts, Timeline.list_recent_posts(100))
+      |> stream(:logs, Logs.list_recent_logs(10))
+
+    {:ok, socket}
   end
 
   @impl true
@@ -47,9 +54,14 @@ defmodule ExInstagramWeb.PostLive.Index do
   end
 
   @impl true
+  def handle_info({"user_activity", _event, log}, socket) do
+    {:noreply, socket |> stream_insert(:logs, log, at: 0)}
+  end
+
+  @impl true
   def handle_event("wake-up", _, socket) do
     ExInstagram.Accounts.list_users()
-    |>Enum.each(&ExInstagram.AiSupervisor.start_child(&1))
+    |> Enum.each(&ExInstagram.AiSupervisor.start_child(&1))
 
     {:noreply, socket}
   end

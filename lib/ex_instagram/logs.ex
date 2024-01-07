@@ -21,6 +21,18 @@ defmodule ExInstagram.Logs do
     Repo.all(Log)
   end
 
+  def list_logs_by_user(%ExInstagram.Accounts.User{} = user) do
+    from(l in Log, where: l.user_id == ^user.id, order_by: {:desc, :inserted_at}, limit: 100)
+    |> Repo.all()
+    |> Repo.preload(:user)
+  end
+
+  def list_recent_logs(limit) do
+    from(l in Log, order_by: [desc: l.inserted_at], limit: ^limit)
+    |> Repo.all()
+    |> Repo.preload(:user)
+  end
+
   @doc """
   Gets a single log.
 
@@ -53,6 +65,13 @@ defmodule ExInstagram.Logs do
     %Log{}
     |> Log.changeset(attrs)
     |> Repo.insert()
+  end
+
+  def create_log!(attrs \\ %{}) do
+    %Log{}
+    |> Log.changeset(attrs)
+    |> Repo.insert!()
+    |> Repo.preload(:user)
   end
 
   @doc """

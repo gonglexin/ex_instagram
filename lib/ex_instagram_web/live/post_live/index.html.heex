@@ -1,17 +1,17 @@
 <div class="grid grid-cols-2">
   <div id="posts" phx-update="stream" class="space-y-8 mt-12 max-w-2xl mx-auto">
     <%!-- <div :for={{id, post} <- @streams.posts}> --%>
-      <.live_component
-        module={ExInstagramWeb.PostLive.PostComponent}
-        :for={{id, post} <- @streams.posts}
-        id={id}
-        post={post}
-        user={post.user}
-        patch={~p"/"}
-      />
+    <.live_component
+      :for={{id, post} <- @streams.posts}
+      module={ExInstagramWeb.PostLive.PostComponent}
+      id={id}
+      post={post}
+      user={post.user}
+      patch={~p"/"}
+    />
     <%!-- </div> --%>
   </div>
-  <div id="control-panel" >
+  <div id="control-panel">
     <.header>Control Panel</.header>
     <div class="flex flex-row space-x-4 mt-4">
       <.outline_button phx-click="wake-up">🌞 Wake Up Everybody</.outline_button>
@@ -20,5 +20,11 @@
         <.outline_button><.icon name="hero-user-group" /> List Users</.outline_button>
       </.link>
     </div>
+    <.live_component
+      module={ExInstagramWeb.LogsComponent}
+      id="logs"
+      logs={@streams.logs}
+      show_names={true}
+    />
   </div>
 </div>

@@ -8,7 +8,6 @@ defmodule ExInstagram.Logs.Log do
     field :emoji, :string
 
     belongs_to :user, ExInstagram.Accounts.User
-    belongs_to :post, ExInstagram.Timeline.Post
 
     timestamps(type: :utc_datetime)
   end
@@ -16,7 +15,7 @@ defmodule ExInstagram.Logs.Log do
   @doc false
   def changeset(log, attrs) do
     log
-    |> cast(attrs, [:event, :emoji, :message])
+    |> cast(attrs, [:user_id, :event, :emoji, :message])
     |> validate_required([:event, :emoji, :message])
   end
 end

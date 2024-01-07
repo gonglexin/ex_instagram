@@ -26,6 +26,15 @@ defmodule ExInstagramWeb.UserLive.Show do
   end
 
   @impl true
+  def handle_info({:post_created, post}, socket) do
+    if post.user.id == socket.assigns.user.id do
+      {:noreply, socket |> stream_insert(:posts, post, at: 0)}
+    else
+      {:noreply, socket}
+    end
+  end
+
+  @impl true
   def handle_info({"user_activity", _event, log}, socket) do
     if log.user_id == socket.assigns.user.id do
       {:noreply, socket |> stream_insert(:logs, log, at: 0)}

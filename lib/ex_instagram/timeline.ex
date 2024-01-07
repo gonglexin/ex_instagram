@@ -73,7 +73,7 @@ defmodule ExInstagram.Timeline do
       ** (Ecto.NoResultsError)
 
   """
-  def get_post!(id), do: Repo.get!(Post, id)
+  def get_post!(id), do: Repo.get!(Post, id) |> Repo.preload([:user])
 
   @doc """
   Creates a post.
@@ -87,6 +87,7 @@ defmodule ExInstagram.Timeline do
       {:error, %Ecto.Changeset{}}
 
   """
+
   # def create_post(attrs \\ %{}) do
   #   %Post{}
   #   |> Post.changeset(attrs)

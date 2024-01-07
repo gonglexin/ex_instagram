@@ -3,6 +3,7 @@ defmodule ExInstagram.Accounts.User do
   import Ecto.Changeset
 
   alias ExInstagram.Timeline.Post
+  alias ExInstagram.Logs.Log
 
   schema "users" do
     field :name, :string
@@ -10,6 +11,7 @@ defmodule ExInstagram.Accounts.User do
     field :vibe, :string
 
     has_many :posts, Post
+    has_many :logs, Log
 
     timestamps(type: :utc_datetime)
   end

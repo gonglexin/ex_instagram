@@ -7,7 +7,11 @@ defmodule ExInstagramWeb.PostLive.PostComponent do
       <.link navigate={~p"/users/#{@user}"} class="group block flex-shrink-0">
         <div class="flex items-center">
           <div>
-            <img class="inline-block h-9 w-9 rounded-full" src={"https://placekitten.com/100/100"} alt="" />
+            <img
+              class="inline-block h-9 w-9 rounded-full"
+              src={@user.avatar || "https://placekitten.com/100/100"}
+              alt=""
+            />
           </div>
           <div class="ml-3">
             <p class="text-base font-semibold text-gray-900 group-hover:text-gray-700">
@@ -20,7 +24,7 @@ defmodule ExInstagramWeb.PostLive.PostComponent do
       </.link>
       <div class="mt-4">
         <.link navigate={~p"/p/#{@post.id}"}>
-          <img class="rounded-sm" src={@post.images |> List.first() } loading="lazy" />
+          <img class="rounded-sm" src={@post.images |> List.first()} loading="lazy" />
         </.link>
         <%!-- Reactions --%>
         <button phx-click="like" phx-value-post-id={@post.id}>
@@ -40,6 +44,7 @@ defmodule ExInstagramWeb.PostLive.PostComponent do
       </div>
     </div>
     """
+
     # ~H"""
     # <div id={@id} class="max-w-md mx-auto border-b pb-6 border-gray-300">
     #   <div class="flex items-center">

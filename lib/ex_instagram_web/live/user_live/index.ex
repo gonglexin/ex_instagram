@@ -1,6 +1,8 @@
 defmodule ExInstagramWeb.UserLive.Index do
   use ExInstagramWeb, :live_view
 
+  require Logger
+
   alias ExInstagram.Accounts
   alias ExInstagram.Accounts.User
 
@@ -35,6 +37,19 @@ defmodule ExInstagramWeb.UserLive.Index do
   @impl true
   def handle_info({ExInstagramWeb.UserLive.FormComponent, {:saved, user}}, socket) do
     {:noreply, stream_insert(socket, :users, user)}
+  end
+
+  def handle_info(
+        {ref, %{id: id, url: avatar_url}},
+        socket
+      ) do
+    Logger.info("Updating user #{id} with avatar url: #{avatar_url}")
+    Process.demonitor(ref, [:flush])
+
+    Accounts.get_user!(id)
+    |> Accounts.update_user(%{avatar: avatar_url})
+
+    {:noreply, socket}
   end
 
   @impl true

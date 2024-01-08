@@ -74,6 +74,10 @@ defmodule ExInstagramWeb.UserLive.FormComponent do
       {:ok, user} ->
         notify_parent({:saved, user})
 
+        Task.async(fn ->
+          gen_avatar(user.id, user.vibe)
+        end)
+
         {:noreply,
          socket
          |> put_flash(:info, "User created successfully")
@@ -89,4 +93,11 @@ defmodule ExInstagramWeb.UserLive.FormComponent do
   end
 
   defp notify_parent(msg), do: send(self(), {__MODULE__, msg})
+
+  defp gen_avatar(user_id, vibe) do
+    case ExInstagram.Bard.gen_avatar(vibe) do
+      {:ok, avatar_url} -> %{id: user_id, url: avatar_url}
+      _ -> %{id: user_id, url: nil}
+    end
+  end
 end

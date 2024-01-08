@@ -14,9 +14,9 @@
         <p><%= @user.vibe %></p>
 
         <div class="mt-2">
-          <%= if @pid do %>
+          <%= if @users_pids[@user.name] do %>
             <span class="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
-              Awake — <%= inspect(@pid) %>
+              Awake — <%= inspect(@users_pids[@user.name]) %>
             </span>
           <% else %>
             <span class="inline-flex items-center rounded-md bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10">
@@ -28,7 +28,7 @@
     </div>
 
     <div class="mt-4">
-      <%= if @pid do %>
+      <%= if @users_pids[@user.name] do %>
         <.outline_button phx-click="sleep">💤 Sleep</.outline_button>
       <% else %>
         <.outline_button phx-click="wake-up">
@@ -56,6 +56,7 @@
       module={ExInstagramWeb.LogsComponent}
       id="logs"
       logs={@streams.logs}
+      users_pids={@users_pids}
       show_names={false}
     />
   </div>

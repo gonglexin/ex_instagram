@@ -10,6 +10,7 @@ defmodule ExInstagramWeb.UserLive.Show do
     if connected?(socket) do
       Timeline.subscribe()
       Phoenix.PubSub.subscribe(ExInstagram.PubSub, "feed")
+      Phoenix.PubSub.subscribe(ExInstagram.PubSub, "users_pids")
     end
 
     {:ok, socket}
@@ -30,6 +31,7 @@ defmodule ExInstagramWeb.UserLive.Show do
      |> assign(:page_title, page_title(socket.assigns.live_action))
      |> assign(:user, user)
      |> assign(:pid, pid)
+     |> assign(:users_pids, Accounts.get_users_pids())
      |> stream(:posts, Timeline.list_posts_by_user(user))
      |> stream(:logs, Logs.list_logs_by_user(user))}
   end
@@ -42,7 +44,13 @@ defmodule ExInstagramWeb.UserLive.Show do
         {:error, {:already_started, pid}} -> pid
       end
 
-    {:noreply, socket |> assign(:pid, pid)}
+    socket =
+      socket
+      |> assign(:pid, pid)
+
+    Phoenix.PubSub.broadcast(ExInstagram.PubSub, "users_pids", {:users_pids, :updated})
+
+    {:noreply, socket}
   end
 
   @impl true
@@ -54,7 +62,16 @@ defmodule ExInstagramWeb.UserLive.Show do
       DynamicSupervisor.terminate_child(ExInstagram.AiSupervisor, pid)
     end
 
+    Phoenix.PubSub.broadcast(ExInstagram.PubSub, "users_pids", {:users_pids, :updated})
+
     {:noreply, socket |> assign(pid: nil)}
+  end
+
+  @impl true
+  def handle_info({:users_pids, :updated}, socket) do
+    users_pids = Accounts.get_users_pids()
+    Logger.info("Updating users_pids: #{inspect(users_pids)}")
+    {:noreply, socket |> assign(:users_pids, users_pids)}
   end
 
   @impl true

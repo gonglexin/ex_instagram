@@ -14,6 +14,7 @@ defmodule ExInstagram.Ai do
 
   @impl true
   def init(user) do
+    Phoenix.PubSub.broadcast(ExInstagram.PubSub, "users_pids", {:users_pids, :updated})
     broadcast({:thought, "🛌", "I'm waking up!"}, user)
     Process.send_after(self(), :think, 3000)
     {:ok, user}

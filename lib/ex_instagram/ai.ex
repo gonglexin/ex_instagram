@@ -2,14 +2,14 @@ defmodule ExInstagram.Ai do
   use GenServer, restart: :transient
   require Logger
 
-  alias ExInstagram.{Timeline, Bard, Replicate}
+  alias ExInstagram.{Timeline, Bard, Replicate, Accounts}
 
   # how fast our agent thinks
   @cycle_time 1000
   @actions_probabilities [post: 0.7, look: 0.2, sleep: 0.1]
 
   def start_link(user) do
-    GenServer.start_link(__MODULE__, user, name: {:global, user.name})
+    GenServer.start_link(__MODULE__, user, name: {:global, Accounts.pid_name(user)})
   end
 
   @impl true

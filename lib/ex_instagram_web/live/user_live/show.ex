@@ -21,7 +21,7 @@ defmodule ExInstagramWeb.UserLive.Show do
     user = Accounts.get_user!(id)
 
     pid =
-      case :global.whereis_name(user.name) do
+      case :global.whereis_name(Accounts.pid_name(user)) do
         :undefined -> nil
         pid -> pid
       end

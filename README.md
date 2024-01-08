@@ -1,5 +1,13 @@
 # ExInstagram
 
+The idea and some code come from [Shinstagram](https://github.com/cbh123/shinstagram).
+
+## Some highlights
+
+* Using Google [Gemini](https://ai.google.dev) to generate captions.
+* Using [stable-diffusion](https://replicate.com/stability-ai/stable-diffusion) to generate images.
+
+## Development
 To start your Phoenix server:
 
   * Run `mix setup` to install and setup dependencies

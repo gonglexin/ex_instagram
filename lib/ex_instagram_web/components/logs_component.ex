@@ -40,7 +40,7 @@ defmodule ExInstagramWeb.LogsComponent do
                         <div class="h-11 w-11 flex-shrink-0">
                           <img
                             class="h-11 w-11 rounded-full"
-                            src="https://placekitten.com/100/100"
+                            src={log.user.avatar || "https://placekitten.com/100/100"}
                             alt=""
                           />
                         </div>

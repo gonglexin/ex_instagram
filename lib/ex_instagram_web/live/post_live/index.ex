@@ -1,19 +1,20 @@
 defmodule ExInstagramWeb.PostLive.Index do
   use ExInstagramWeb, :live_view
 
-  alias ExInstagram.Logs
-  alias ExInstagram.Timeline
+  alias ExInstagram.{Accounts, Logs, Timeline, Ai, AiSupervisor}
   alias ExInstagram.Timeline.Post
 
   @impl true
   def mount(_params, _session, socket) do
     if connected?(socket) do
       Phoenix.PubSub.subscribe(ExInstagram.PubSub, "feed")
+      Phoenix.PubSub.subscribe(ExInstagram.PubSub, "users_pids")
       Timeline.subscribe()
     end
 
     socket =
       socket
+      |> assign(:users_pids, Accounts.get_users_pids())
       |> stream(:posts, Timeline.list_recent_posts(100))
       |> stream(:logs, Logs.list_recent_logs(10))
 
@@ -44,6 +45,12 @@ defmodule ExInstagramWeb.PostLive.Index do
   end
 
   @impl true
+  def handle_info({:users_pids, :updated}, socket) do
+    users_pids = Accounts.get_users_pids()
+    {:noreply, socket |> assign(:users_pids, users_pids)}
+  end
+
+  @impl true
   def handle_info({:post_created, post}, socket) do
     {:noreply, socket |> stream_insert(:posts, post, at: 0)}
   end
@@ -60,18 +67,20 @@ defmodule ExInstagramWeb.PostLive.Index do
 
   @impl true
   def handle_event("wake-up", _, socket) do
-    ExInstagram.Accounts.list_users()
-    |> Enum.each(&ExInstagram.AiSupervisor.start_child(&1))
+    Accounts.list_users()
+    |> Enum.each(&AiSupervisor.start_child(&1))
 
     {:noreply, socket}
   end
 
   @impl true
   def handle_event("sleep", _, socket) do
-    DynamicSupervisor.which_children(ExInstagram.AiSupervisor)
-    |> Enum.each(fn {_, pid, :worker, [ExInstagram.Ai]} ->
-      DynamicSupervisor.terminate_child(ExInstagram.AiSupervisor, pid)
+    DynamicSupervisor.which_children(AiSupervisor)
+    |> Enum.each(fn {_, pid, :worker, [Ai]} ->
+      DynamicSupervisor.terminate_child(AiSupervisor, pid)
     end)
+
+    Phoenix.PubSub.broadcast(ExInstagram.PubSub, "users_pids", {:users_pids, :updated})
 
     {:noreply, socket}
   end

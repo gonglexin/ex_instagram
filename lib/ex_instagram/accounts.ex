@@ -8,6 +8,20 @@ defmodule ExInstagram.Accounts do
 
   alias ExInstagram.Accounts.User
 
+  def get_users_pids() do
+    list_users()
+    |> Enum.map(fn user ->
+      pid =
+        case :global.whereis_name(user.name) do
+          :undefined -> nil
+          pid -> pid
+        end
+
+      {user.name, pid}
+    end)
+    |> Enum.into(%{})
+  end
+
   @doc """
   Returns the list of users.
 

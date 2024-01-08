@@ -59,7 +59,8 @@ defmodule ExInstagramWeb.LogsComponent do
                       <div class="text-gray-900"><%= render_post_link(log.message) %></div>
                     </td>
                     <td class="whitespace-nowrap px-3 py-5 text-sm text-gray-500">
-                      <%= if false do %>
+                      <%= if @users_pids[log.user.name] do %>
+                        <%= inspect(@users_pids[log.user.name]) %>
                       <% else %>
                         <span class="inline-flex items-center rounded-md bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10">
                           Asleep

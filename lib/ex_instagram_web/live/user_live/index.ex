@@ -36,6 +36,12 @@ defmodule ExInstagramWeb.UserLive.Index do
 
   @impl true
   def handle_info({ExInstagramWeb.UserLive.FormComponent, {:saved, user}}, socket) do
+    if is_nil(user.avatar) do
+      Task.async(fn ->
+        gen_avatar(user.id, user.vibe)
+      end)
+    end
+
     {:noreply, stream_insert(socket, :users, user)}
   end
 
@@ -58,5 +64,12 @@ defmodule ExInstagramWeb.UserLive.Index do
     {:ok, _} = Accounts.delete_user(user)
 
     {:noreply, stream_delete(socket, :users, user)}
+  end
+
+  defp gen_avatar(user_id, vibe) do
+    case ExInstagram.Bard.gen_avatar(vibe) do
+      {:ok, avatar_url} -> %{id: user_id, url: avatar_url}
+      _ -> %{id: user_id, url: nil}
+    end
   end
 end

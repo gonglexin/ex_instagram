@@ -68,6 +68,31 @@ defmodule ExInstagramWeb.UserLive.Show do
   end
 
   @impl true
+  def handle_info({ExInstagramWeb.UserLive.FormComponent, {:saved, user}}, socket) do
+    if is_nil(user.avatar) do
+      Task.async(fn ->
+        gen_avatar(user.id, user.vibe)
+      end)
+    end
+
+    {:noreply, socket}
+  end
+
+  def handle_info(
+        {ref, %{id: id, url: avatar_url}},
+        socket
+      ) do
+    Logger.info("Updating user #{id} with avatar url: #{avatar_url}")
+    Process.demonitor(ref, [:flush])
+
+    {:ok, user} =
+      Accounts.get_user!(id)
+      |> Accounts.update_user(%{avatar: avatar_url})
+
+    {:noreply, socket |> assign(:user, user)}
+  end
+
+  @impl true
   def handle_info({:users_pids, :updated}, socket) do
     users_pids = Accounts.get_users_pids()
     Logger.info("Updating users_pids: #{inspect(users_pids)}")
@@ -94,4 +119,11 @@ defmodule ExInstagramWeb.UserLive.Show do
 
   defp page_title(:show), do: "Show User"
   defp page_title(:edit), do: "Edit User"
+
+  defp gen_avatar(user_id, vibe) do
+    case ExInstagram.Bard.gen_avatar(vibe) do
+      {:ok, avatar_url} -> %{id: user_id, url: avatar_url}
+      _ -> %{id: user_id, url: nil}
+    end
+  end
 end

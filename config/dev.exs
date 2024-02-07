@@ -25,8 +25,8 @@ config :ex_instagram, ExInstagramWeb.Endpoint,
   debug_errors: true,
   secret_key_base: "QjgTvcbQZfqiMFAulcrr3x67uWobSlI6bUlljSQv0Gy2HJ1LazmcTQf4iucAf/50",
   watchers: [
-    esbuild: {Esbuild, :install_and_run, [:default, ~w(--sourcemap=inline --watch)]},
-    tailwind: {Tailwind, :install_and_run, [:default, ~w(--watch)]}
+    esbuild: {Esbuild, :install_and_run, [:ex_instagram, ~w(--sourcemap=inline --watch)]},
+    tailwind: {Tailwind, :install_and_run, [:ex_instagram, ~w(--watch)]}
   ]
 
 # ## SSL Support
@@ -56,7 +56,7 @@ config :ex_instagram, ExInstagramWeb.Endpoint,
 config :ex_instagram, ExInstagramWeb.Endpoint,
   live_reload: [
     patterns: [
-      ~r"priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$",
+      ~r"priv/static/(?!uploads/).*(js|css|png|jpeg|jpg|gif|svg)$",
       ~r"priv/gettext/.*(po)$",
       ~r"lib/ex_instagram_web/(controllers|live|components)/.*(ex|heex)$"
     ]

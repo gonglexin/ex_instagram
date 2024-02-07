@@ -14,7 +14,7 @@ config :ex_instagram,
 # Configures the endpoint
 config :ex_instagram, ExInstagramWeb.Endpoint,
   url: [host: "localhost"],
-  adapter: Phoenix.Endpoint.Cowboy2Adapter,
+  adapter: Bandit.PhoenixAdapter,
   render_errors: [
     formats: [html: ExInstagramWeb.ErrorHTML, json: ExInstagramWeb.ErrorJSON],
     layout: false
@@ -34,7 +34,7 @@ config :ex_instagram, ExInstagram.Mailer, adapter: Swoosh.Adapters.Local
 # Configure esbuild (the version is required)
 config :esbuild,
   version: "0.17.11",
-  default: [
+  ex_instagram: [
     args:
       ~w(js/app.js --bundle --target=es2017 --outdir=../priv/static/assets --external:/fonts/* --external:/images/*),
     cd: Path.expand("../assets", __DIR__),
@@ -43,8 +43,8 @@ config :esbuild,
 
 # Configure tailwind (the version is required)
 config :tailwind,
-  version: "3.3.2",
-  default: [
+  version: "3.4.0",
+  ex_instagram: [
     args: ~w(
       --config=tailwind.config.js
       --input=css/app.css

@@ -36,7 +36,7 @@ defmodule ExInstagramWeb.PostLive.PostComponent do
 
         <%!-- Caption --%>
         <p :if={not is_nil(@post.caption)} class="text-base mt-2">
-          <.link class="font-bold" navigate={~p"/#{@user.name}"}>
+          <.link class="font-bold" navigate={~p"/users/#{@user}"}>
             <%= @user.name %>
           </.link>
           <%= @post.caption |> String.replace("\"", "") %>

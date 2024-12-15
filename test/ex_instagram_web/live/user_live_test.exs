@@ -5,7 +5,11 @@ defmodule ExInstagramWeb.UserLiveTest do
   import ExInstagram.AccountsFixtures
 
   @create_attrs %{name: "some name", language: "some language", vibe: "some vibe"}
-  @update_attrs %{name: "some updated name", language: "some updated language", vibe: "some updated vibe"}
+  @update_attrs %{
+    name: "some updated name",
+    language: "some updated language",
+    vibe: "some updated vibe"
+  }
   @invalid_attrs %{name: nil, language: nil, vibe: nil}
 
   defp create_user(_) do

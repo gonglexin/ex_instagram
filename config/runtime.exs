@@ -29,7 +29,7 @@ config :ex_aws,
   secret_access_key: [{:system, "CLOUDFLARE_AWS_SECRET_ACCESS_KEY"}, :instance_role],
   s3: [
     scheme: "https://",
-    host: System.get_env("CLOUDFLARE_R2_HOST"),
+    host: System.get_env("CLOUDFLARE_R2_HOST")
   ]
 
 if config_env() == :prod do

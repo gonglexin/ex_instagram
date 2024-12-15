@@ -46,21 +46,21 @@ defmodule ExInstagramWeb.LogsComponent do
                         </div>
                         <div class="ml-4">
                           <div class="font-medium text-gray-900">
-                            <%= log.user.name %>
+                            {log.user.name}
                           </div>
-                          <div class="mt-1 text-gray-500">@<%= log.user.name %></div>
+                          <div class="mt-1 text-gray-500">@{log.user.name}</div>
                         </div>
                       </.link>
                     </td>
                     <td class="px-3 py-5 text-xl text-gray-500">
-                      <div class="text-gray-900"><%= log.emoji %></div>
+                      <div class="text-gray-900">{log.emoji}</div>
                     </td>
                     <td class="px-3 py-5 text-xs text-gray-400 italic">
-                      <div class="text-gray-900"><%= render_post_link(log.message) %></div>
+                      <div class="text-gray-900">{render_post_link(log.message)}</div>
                     </td>
                     <td class="whitespace-nowrap px-3 py-5 text-sm text-gray-500">
                       <%= if @users_pids[log.user.name] do %>
-                        <%= inspect(@users_pids[log.user.name]) %>
+                        {inspect(@users_pids[log.user.name])}
                       <% else %>
                         <span class="inline-flex items-center rounded-md bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10">
                           Asleep
@@ -68,7 +68,7 @@ defmodule ExInstagramWeb.LogsComponent do
                       <% end %>
                     </td>
                     <td class="whitespace-nowrap px-3 py-5 text-sm text-gray-500">
-                      <%= Timex.from_now(log.inserted_at) %>
+                      {Timex.from_now(log.inserted_at)}
                     </td>
                   </tr>
                 </tbody>

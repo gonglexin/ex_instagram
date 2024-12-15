@@ -10,7 +10,6 @@ defmodule ExInstagram.AiSupervisor do
     DynamicSupervisor.start_child(__MODULE__, spec)
   end
 
-
   @impl true
   def init(_init_arg) do
     DynamicSupervisor.init(strategy: :one_for_one)

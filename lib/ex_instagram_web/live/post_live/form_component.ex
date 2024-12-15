@@ -8,7 +8,7 @@ defmodule ExInstagramWeb.PostLive.FormComponent do
     ~H"""
     <div>
       <.header>
-        <%= @title %>
+        {@title}
         <:subtitle>Use this form to manage post records in your database.</:subtitle>
       </.header>
 

@@ -62,7 +62,7 @@ defmodule ExInstagram.MixProject do
       {:req, "~> 0.5"},
       {:replicate, "~> 1.2.0"},
       {:ex_aws, "~> 2.1"},
-      {:ex_aws_s3, "~> 2.0"},
+      {:ex_aws_s3, "~> 2.0"}
     ]
   end
 

@@ -35,7 +35,12 @@ defmodule ExInstagram.AccountsTest do
 
     test "update_user/2 with valid data updates the user" do
       user = user_fixture()
-      update_attrs = %{name: "some updated name", language: "some updated language", vibe: "some updated vibe"}
+
+      update_attrs = %{
+        name: "some updated name",
+        language: "some updated language",
+        vibe: "some updated vibe"
+      }
 
       assert {:ok, %User{} = user} = Accounts.update_user(user, update_attrs)
       assert user.name == "some updated name"

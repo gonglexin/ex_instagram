@@ -35,7 +35,12 @@ defmodule ExInstagram.LogsTest do
 
     test "update_log/2 with valid data updates the log" do
       log = log_fixture()
-      update_attrs = %{message: "some updated message", event: "some updated event", emoji: "some updated emoji"}
+
+      update_attrs = %{
+        message: "some updated message",
+        event: "some updated event",
+        emoji: "some updated emoji"
+      }
 
       assert {:ok, %Log{} = log} = Logs.update_log(log, update_attrs)
       assert log.message == "some updated message"

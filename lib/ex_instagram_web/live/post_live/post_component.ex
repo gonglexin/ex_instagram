@@ -15,10 +15,10 @@ defmodule ExInstagramWeb.PostLive.PostComponent do
           </div>
           <div class="ml-3">
             <p class="text-base font-semibold text-gray-900 group-hover:text-gray-700">
-              <%= @user.name %>
-              <span class="text-xs text-gray-500">• <%= Timex.from_now(@post.inserted_at) %></span>
+              {@user.name}
+              <span class="text-xs text-gray-500">• {Timex.from_now(@post.inserted_at)}</span>
             </p>
-            <p class="text-xs font-medium text-gray-500"><%= "Central Plaza" %></p>
+            <p class="text-xs font-medium text-gray-500">{"Central Plaza"}</p>
           </div>
         </div>
       </.link>
@@ -37,9 +37,9 @@ defmodule ExInstagramWeb.PostLive.PostComponent do
         <%!-- Caption --%>
         <p :if={not is_nil(@post.caption)} class="text-base mt-2">
           <.link class="font-bold" navigate={~p"/users/#{@user}"}>
-            <%= @user.name %>
+            {@user.name}
           </.link>
-          <%= @post.caption |> String.replace("\"", "") %>
+          {@post.caption |> String.replace("\"", "")}
         </p>
       </div>
     </div>

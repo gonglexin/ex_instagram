@@ -42,8 +42,9 @@ defmodule ExInstagramWeb do
         formats: [:html, :json],
         layouts: [html: ExInstagramWeb.Layouts]
 
+      use Gettext, backend: ExInstagramWeb.Gettext
+
       import Plug.Conn
-      import ExInstagramWeb.Gettext
 
       unquote(verified_routes())
     end
@@ -81,11 +82,13 @@ defmodule ExInstagramWeb do
 
   defp html_helpers do
     quote do
+      # Translation
+      use Gettext, backend: ExInstagramWeb.Gettext
+
       # HTML escaping functionality
       import Phoenix.HTML
-      # Core UI components and translation
+      # Core UI components
       import ExInstagramWeb.CoreComponents
-      import ExInstagramWeb.Gettext
 
       # Shortcut for generating JS commands
       alias Phoenix.LiveView.JS

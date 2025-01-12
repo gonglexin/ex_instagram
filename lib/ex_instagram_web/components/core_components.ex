@@ -15,9 +15,9 @@ defmodule ExInstagramWeb.CoreComponents do
   Icons are provided by [heroicons](https://heroicons.com). See `icon/1` for usage.
   """
   use Phoenix.Component
+  use Gettext, backend: ExInstagramWeb.Gettext
 
   alias Phoenix.LiveView.JS
-  import ExInstagramWeb.Gettext
 
   attr(:type, :string, default: nil)
   attr(:class, :string, default: nil)
@@ -382,7 +382,7 @@ defmodule ExInstagramWeb.CoreComponents do
           @errors != [] && "border-rose-400 focus:border-rose-400"
         ]}
         {@rest}
-      ><%= Phoenix.HTML.Form.normalize_value("textarea", @value) %></textarea>
+      >{Phoenix.HTML.Form.normalize_value("textarea", @value)}</textarea>
       <.error :for={msg <- @errors}>{msg}</.error>
     </div>
     """
